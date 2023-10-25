@@ -1,0 +1,107 @@
+<html>
+<title>Cars App</title>
+
+<head>
+    <style>
+        table, tr, td {
+            border: 1px solid;
+        },
+        .warning {
+            color: #ff4233;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <a href="{% url 'index' %}">My Car App</a>
+    <hr>
+
+    {% if user.is_authenticated %}
+    Hello {{ user }}
+    {% endif %}
+    <br>
+
+    {% if user.is_authenticated %}
+    <ul>
+        <li><a href="{% url 'account_logout' %}">Logout</a>
+    {% else %}
+        <li><a href="{% url 'account_login' %}">Login</a>
+    </ul>
+    {% endif %}
+
+
+    <hr>
+    <table style="width: 600px">
+    {% for row in cars_qs %}
+        <tr id="row_{{row.id}}">
+            <td>{{ row.id }}</td>
+            <td>{{ row.make }}</td>
+            <td>{{ row.model }}</td>
+            <td>{{ row.year }}</td>
+
+            {% if user.is_authenticated %}
+            <td>
+
+                <button type="button"
+                style="background-color: #ff4233;"
+                id="delete_btn"
+                car_id="{{row.id}}"
+                hx-get="{% url 'delete' car_id=row.id %}"
+                hx-target="#row_{{row.id}}"
+                hx-confirm="Are you sure you want to delete {{ row.make }} {{ row.model }} - {{ row.year }}??">
+                Delete</button>
+
+                <button type="button"
+                id="edit_form_btn"
+                car_id="{{row.id}}"
+                hx-get="{% url 'edit_form' car_id=row.id %}"
+                hx-target="#response">
+                Edit via Django Form</button>
+
+
+                <button type="button"
+                id="edit_htmx_btn"
+                car_id="{{row.id}}"
+                hx-get="{% url 'edit_htmx' car_id=row.id %}"
+                hx-swap="innerHTML"
+                hx-target="#response">
+                Edit via HTMX call</button>
+            </td>
+            {% endif %}
+
+        </tr>
+
+    {% endfor %}
+    </table>
+    <div id="response"></div>
+
+
+
+<p>
+
+    {% if "managers" in grouplist %}
+    <h2>New record</h2>
+    <form action="{% url 'index' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <input type="submit" value="submit">
+    </form>
+    {% endif %}
+
+
+
+<script src="https://unpkg.com/htmx.org@1.9.6"></script>
+
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
+</script>
+
+</body>
+
+
+</html>

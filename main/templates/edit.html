@@ -1,0 +1,11 @@
+<div style="background-color: #999CCC">
+    <br>
+    <h2>Editing a car record via Form submit</h2>
+    <b>this HTML is coming from edit.html page via Form submit<br>
+    <hr>
+    <form action="{% url 'edit_form' car_id=car_id %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <input type="submit" value="save">
+    </form>
+</div>
