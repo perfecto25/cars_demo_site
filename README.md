@@ -1,7 +1,6 @@
 # Cars demo CRUD site with Django, HTMX, django-allauth
 
-Youtube link to tutorial:
-
+[Youtube link to tutorial](https://youtu.be/ey0jYO2amZM?si=g05MZmJIKcKFMwJ4)
 
 
 
